@@ -1,0 +1,30 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with UDA colors -->
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F7C821;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#179847;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="url(#grad)"/>
+
+  <!-- White circle background for icon -->
+  <circle cx="256" cy="256" r="200" fill="white"/>
+
+  <!-- People icon representing members -->
+  <g fill="#179847">
+    <!-- Person 1 -->
+    <circle cx="200" cy="220" r="30"/>
+    <path d="M 200 260 C 170 260 145 285 145 315 L 145 340 L 255 340 L 255 315 C 255 285 230 260 200 260 Z"/>
+
+    <!-- Person 2 -->
+    <circle cx="312" cy="220" r="30"/>
+    <path d="M 312 260 C 282 260 257 285 257 315 L 257 340 L 367 340 L 367 315 C 367 285 342 260 312 260 Z"/>
+
+    <!-- Person 3 (smaller, in front) -->
+    <circle cx="256" cy="250" r="25"/>
+    <path d="M 256 285 C 230 285 210 305 210 331 L 210 350 L 302 350 L 302 331 C 302 305 282 285 256 285 Z"/>
+  </g>
+</svg>

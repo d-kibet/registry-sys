@@ -1,0 +1,65 @@
+{
+  "name": "UDA Member Registry",
+  "short_name": "UDA Registry",
+  "description": "United Democratic Alliance Member Registration System",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#179847",
+  "theme_color": "#179847",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "business"],
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Register Member",
+      "short_name": "Register",
+      "description": "Register a new member",
+      "url": "/agent/register",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "My Registrations",
+      "short_name": "My Data",
+      "description": "View my registrations",
+      "url": "/agent/my-registrations",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
