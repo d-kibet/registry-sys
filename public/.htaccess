@@ -5,6 +5,20 @@
 
     RewriteEngine On
 
+    # Serve favicon and icons with proper MIME types
+    <IfModule mod_mime.c>
+        AddType image/x-icon .ico
+        AddType image/png .png
+    </IfModule>
+
+    # Cache static assets
+    <IfModule mod_expires.c>
+        ExpiresActive On
+        ExpiresByType image/x-icon "access plus 1 year"
+        ExpiresByType image/png "access plus 1 year"
+        ExpiresByType application/manifest+json "access plus 1 week"
+    </IfModule>
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

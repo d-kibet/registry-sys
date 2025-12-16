@@ -1,0 +1,82 @@
+================================
+HOSTED SERVER DEPLOYMENT GUIDE
+================================
+
+STORAGE LINK ISSUE - QUICK FIX:
+-------------------------------
+✅ Your app is ALREADY CONFIGURED to work WITHOUT symlinks!
+✅ Files are served via route: /storage/{path}
+✅ No action needed - just deploy and it works!
+
+
+IF YOU STILL WANT TO CREATE SYMLINK:
+------------------------------------
+
+Method 1: SSH (Fastest)
+-----------------------
+ssh into your server, then:
+  cd ~/public_html
+  ln -s ~/public_html/storage/app/public ~/public_html/public/storage
+
+Method 2: cPanel File Manager
+-----------------------------
+1. Open cPanel → File Manager
+2. Go to public_html/public folder
+3. Right-click → Create Symbolic Link
+4. Name: storage
+5. Target: ../storage/app/public
+
+Method 3: Custom Command
+------------------------
+  php artisan storage:link-manual
+
+
+DEPLOYMENT STEPS:
+-----------------
+1. Upload files via FTP/Git
+2. composer install --optimize-autoloader --no-dev
+3. Copy .env.example to .env and configure
+4. php artisan key:generate
+5. php artisan migrate --force
+6. chmod -R 775 storage bootstrap/cache
+7. php artisan config:cache
+8. php artisan route:cache
+9. php artisan view:cache
+10. Test the application!
+
+
+VERIFY STORAGE IS WORKING:
+--------------------------
+1. Register a member with photo
+2. Photo should display in registrations table
+3. Images accessible at: yourdomain.com/storage/verification_proofs/...
+
+
+TROUBLESHOOTING:
+----------------
+Q: Images not showing?
+A: Check storage/app/public/verification_proofs/ exists and has files
+
+Q: 500 errors?
+A: Check storage/logs/laravel.log for details
+
+Q: Permission denied?
+A: Run: chmod -R 775 storage bootstrap/cache
+
+Q: php artisan storage:link fails?
+A: No problem! Use route-based serving (already configured)
+
+
+SUPPORT FILES:
+--------------
+- Detailed Guide: HOSTING_STORAGE_SETUP.md
+- Custom Command: app/Console/Commands/CreateStorageLink.php
+- Storage Route: routes/web.php (line 25-38)
+
+
+CONTACT YOUR HOSTING PROVIDER IF:
+----------------------------------
+- Unable to set file permissions
+- Unable to access SSH
+- Unable to run artisan commands
+- PHP version is below 8.2

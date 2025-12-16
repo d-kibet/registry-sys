@@ -7,6 +7,7 @@ const STATIC_CACHE_URLS = [
   '/',
   '/offline',
   '/manifest.json',
+  '/favicon.ico',
   '/icon-192x192.png',
   '/icon-512x512.png',
 ];
