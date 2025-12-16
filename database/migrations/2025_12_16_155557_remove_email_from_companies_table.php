@@ -23,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->string('email')->unique()->after('name');
+            // Make email nullable since existing records won't have it
+            $table->string('email')->nullable()->unique()->after('name');
         });
     }
 };

@@ -50,10 +50,27 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Drop index
-        Schema::table('members', function (Blueprint $table) {
-            $table->dropIndex(['vie_position']);
-        });
+        // Drop index - handle permission errors gracefully
+        try {
+            // Check if index exists first
+            $indexExists = DB::select("SELECT indexname FROM pg_indexes WHERE tablename = 'members' AND indexname = 'members_vie_position_index'");
+
+            if (!empty($indexExists)) {
+                // Try to drop using raw SQL with IF EXISTS
+                DB::statement('DROP INDEX IF EXISTS members_vie_position_index');
+            }
+        } catch (\Exception $e) {
+            // If permission denied, try using Schema builder
+            try {
+                Schema::table('members', function (Blueprint $table) {
+                    $table->dropIndex(['vie_position']);
+                });
+            } catch (\Exception $e2) {
+                // Log the error but don't fail the migration
+                // The index will remain, which is acceptable for rollback
+                \Log::warning('Could not drop index members_vie_position_index: ' . $e2->getMessage());
+            }
+        }
 
         // Convert back from enum to string
         Schema::table('members', function (Blueprint $table) {
