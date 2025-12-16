@@ -63,7 +63,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Recreate with old enum values
+        // Recreate with old enum values (nullable first to avoid NOT NULL violation)
         Schema::table('members', function (Blueprint $table) {
             $table->string('gender_temp')->nullable()->after('gender');
         });
@@ -75,10 +75,13 @@ return new class extends Migration
         });
 
         Schema::table('members', function (Blueprint $table) {
-            $table->enum('gender', ['Male', 'Female', 'Prefer not to say'])->after('id_number');
+            $table->enum('gender', ['Male', 'Female', 'Prefer not to say'])->nullable()->after('id_number');
         });
 
         DB::statement("UPDATE members SET gender = gender_temp");
+
+        // Make gender NOT NULL after data is populated
+        DB::statement("ALTER TABLE members ALTER COLUMN gender SET NOT NULL");
 
         Schema::table('members', function (Blueprint $table) {
             $table->dropColumn('gender_temp');

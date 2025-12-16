@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -28,6 +29,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Update any NULL emails to a default value before making it NOT NULL
+        DB::table('users')
+            ->whereNull('email')
+            ->update(['email' => DB::raw("CONCAT('user_', id, '@temp.local')")]);
+
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn(['id_number', 'first_name', 'second_name', 'last_name']);
 
