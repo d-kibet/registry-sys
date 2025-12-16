@@ -1,4 +1,4 @@
-<div class="p-4 max-w-2xl mx-auto space-y-4">
+<div class="p-4 space-y-4">
 
     <!-- Page Header -->
     <div class="mb-6">
@@ -75,84 +75,109 @@
         </div>
     @endif
 
-    <!-- Agents List -->
+    <!-- Agents Table -->
     @if($agents->count() > 0)
-        <div class="space-y-3">
-            @foreach($agents as $agent)
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-gray-900/50 p-5 border-l-4 {{ $agent->is_active ? 'border-uda-green-500 dark:border-uda-green-400' : 'border-gray-400 dark:border-gray-600' }} transition-colors duration-200">
-                    <!-- Agent Header -->
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="flex-1">
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">{{ $agent->name }}</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">ID: #{{ $agent->id }}</p>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            @if($agent->is_active)
-                                <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">Active</span>
-                            @else
-                                <span class="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">Inactive</span>
-                            @endif
-                        </div>
-                    </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-gray-900/50 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-900">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Agent</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Company</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Contact</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Members Registered</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        @foreach($agents as $agent)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                <!-- Agent Name & ID -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div>
+                                        <div class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ $agent->name }}</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">ID: #{{ $agent->id }}</div>
+                                    </div>
+                                </td>
 
-                    <!-- Company Badge -->
-                    @if($agent->company)
-                        <div class="mb-3 inline-block px-3 py-1 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg">
-                            <div class="flex items-center space-x-2">
-                                <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                </svg>
-                                <span class="text-sm font-semibold text-blue-800 dark:text-blue-400">{{ $agent->company->name }}</span>
-                            </div>
-                        </div>
-                    @else
-                        <div class="mb-3 inline-block px-3 py-1 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                            <span class="text-sm font-semibold text-red-800 dark:text-red-400">No Company Assigned</span>
-                        </div>
-                    @endif
+                                <!-- Company -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($agent->company)
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400">
+                                            {{ $agent->company->name }}
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400">
+                                            Unassigned
+                                        </span>
+                                    @endif
+                                </td>
 
-                    <!-- Agent Details -->
-                    <div class="space-y-2 mb-4">
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                            <p class="text-sm text-gray-700 dark:text-gray-300">{{ $agent->email }}</p>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                            </svg>
-                            <p class="text-sm text-gray-700 dark:text-gray-300">{{ $agent->phone }}</p>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <p class="text-sm text-gray-700 dark:text-gray-300">Joined: {{ $agent->created_at->format('d/m/Y') }}</p>
-                        </div>
-                    </div>
+                                <!-- Contact -->
+                                <td class="px-6 py-4">
+                                    <div class="space-y-1">
+                                        <div class="flex items-center space-x-2">
+                                            <svg class="w-3 h-3 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                            </svg>
+                                            <span class="text-xs text-gray-700 dark:text-gray-300">{{ $agent->email }}</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <svg class="w-3 h-3 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                            </svg>
+                                            <span class="text-xs text-gray-700 dark:text-gray-300">{{ $agent->phone }}</span>
+                                        </div>
+                                    </div>
+                                </td>
 
-                    <!-- Stats -->
-                    <div class="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg mb-4">
-                        <div class="text-center">
-                            <p class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ $agent->registered_members_count }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400">Members Registered</p>
-                        </div>
-                    </div>
+                                <!-- Members Registered -->
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    <div class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $agent->registered_members_count }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">members</div>
+                                </td>
 
-                    <!-- Action Button -->
-                    <div>
-                        <button
-                            wire:click="toggleStatus({{ $agent->id }})"
-                            wire:confirm="Are you sure you want to {{ $agent->is_active ? 'deactivate' : 'activate' }} this agent?"
-                            class="w-full py-3 {{ $agent->is_active ? 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700' : 'bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700' }} text-white font-semibold rounded-lg transition"
-                        >
-                            {{ $agent->is_active ? 'Deactivate' : 'Activate' }}
-                        </button>
-                    </div>
-                </div>
-            @endforeach
+                                <!-- Status -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($agent->is_active)
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
+                                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                            Active
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                                            <span class="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
+                                            Inactive
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <!-- Action -->
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <button
+                                        wire:click="toggleStatus({{ $agent->id }})"
+                                        wire:confirm="Are you sure you want to {{ $agent->is_active ? 'deactivate' : 'activate' }} this agent?"
+                                        class="inline-flex items-center px-3 py-2 {{ $agent->is_active ? 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700' : 'bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700' }} text-white font-semibold rounded-lg transition"
+                                    >
+                                        @if($agent->is_active)
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                            </svg>
+                                            Deactivate
+                                        @else
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Activate
+                                        @endif
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Pagination -->

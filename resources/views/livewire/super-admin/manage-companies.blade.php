@@ -1,4 +1,4 @@
-<div class="p-4 max-w-2xl mx-auto space-y-4">
+<div class="p-4 space-y-4">
 
     <!-- Page Header -->
     <div class="flex items-center justify-between mb-6">
@@ -53,161 +53,133 @@
         <span>Create New Company</span>
     </button>
 
-    <!-- Companies List -->
+    <!-- Companies Table -->
     @if($companies->count() > 0)
-        <div class="space-y-3">
-            @foreach($companies as $company)
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-gray-900/50 p-5 border-l-4 {{ $company->is_active ? 'border-uda-green-500 dark:border-uda-green-400' : 'border-gray-400 dark:border-gray-600' }} transition-colors duration-200">
-                    <!-- Company Header -->
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="flex-1">
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">{{ $company->name }}</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">ID: #{{ $company->id }}</p>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            @if($company->is_active)
-                                <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">Active</span>
-                            @else
-                                <span class="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">Suspended</span>
-                            @endif
-                        </div>
-                    </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-gray-900/50 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-900">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Company</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Phone</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Constituencies</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Stats</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        @foreach($companies as $company)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                <!-- Company Name & ID -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div>
+                                        <div class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ $company->name }}</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">ID: #{{ $company->id }}</div>
+                                    </div>
+                                </td>
 
-                    <!-- Company Details -->
-                    <div class="space-y-2 mb-4">
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                            <p class="text-sm text-gray-700 dark:text-gray-300">{{ $company->email }}</p>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                            </svg>
-                            <p class="text-sm text-gray-700 dark:text-gray-300">{{ $company->phone }}</p>
-                        </div>
-                        @if($company->address)
-                            <div class="flex items-center space-x-2">
-                                <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                <p class="text-sm text-gray-700 dark:text-gray-300">{{ $company->address }}</p>
-                            </div>
-                        @endif
-                    </div>
+                                <!-- Phone -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-2">
+                                        <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                        </svg>
+                                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $company->phone }}</span>
+                                    </div>
+                                </td>
 
-                    <!-- Stats -->
-                    <div class="grid grid-cols-3 gap-3 mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <div class="text-center">
-                            <p class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ $company->agents->count() }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400">Agents</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ $company->users_count - $company->agents->count() }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400">Admins</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ $company->members_count }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400">Members</p>
-                        </div>
-                    </div>
+                                <!-- Constituencies -->
+                                <td class="px-6 py-4">
+                                    @if($company->constituencies->count() > 0)
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400">
+                                            {{ $company->constituencies->count() }} assigned
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400">
+                                            None
+                                        </span>
+                                    @endif
+                                </td>
 
-                    <!-- Assigned Constituencies -->
-                    @if($company->constituencies->count() > 0)
-                        <div class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                            <p class="text-xs font-semibold text-gray-700 mb-2 flex items-center">
-                                <svg class="w-4 h-4 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                Assigned Constituencies ({{ $company->constituencies->count() }})
-                            </p>
-                            <div class="flex flex-wrap gap-1">
-                                @foreach($company->constituencies as $constituency)
-                                    <span class="inline-block px-2 py-1 text-xs bg-white border border-blue-300 text-blue-700 rounded">
-                                        {{ $constituency->name }}
-                                    </span>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <div class="mb-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                            <p class="text-xs text-yellow-800">
-                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                </svg>
-                                No constituencies assigned - agents cannot register members
-                            </p>
-                        </div>
-                    @endif
-
-                    <!-- Company Agents -->
-                    @if($company->agents->count() > 0)
-                        <div class="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                            <p class="text-xs font-semibold text-gray-700 mb-2 flex items-center">
-                                <svg class="w-4 h-4 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                                Company Agents ({{ $company->agents->count() }})
-                            </p>
-                            <div class="space-y-2">
-                                @foreach($company->agents as $agent)
-                                    <div class="flex items-center justify-between p-2 bg-white rounded border border-green-300">
-                                        <div class="flex items-center space-x-2 flex-1">
-                                            <div class="w-8 h-8 bg-gradient-to-br from-uda-yellow-500 to-uda-green-500 rounded-full flex items-center justify-center text-white font-bold text-xs">
-                                                {{ substr($agent->name, 0, 1) }}
-                                            </div>
-                                            <div class="flex-1">
-                                                <p class="text-sm font-semibold text-gray-800">{{ $agent->name }}</p>
-                                                <p class="text-xs text-gray-600">{{ $agent->email }}</p>
-                                            </div>
+                                <!-- Stats -->
+                                <td class="px-6 py-4">
+                                    <div class="flex space-x-4 text-sm">
+                                        <div class="text-center">
+                                            <div class="font-bold text-gray-900 dark:text-gray-100">{{ $company->agents->count() }}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">Agents</div>
                                         </div>
-                                        <div class="flex items-center space-x-3">
-                                            <div class="text-right">
-                                                <p class="text-sm font-bold text-gray-800">{{ $agent->registered_members_count }}</p>
-                                                <p class="text-xs text-gray-600">Members</p>
-                                            </div>
-                                            @if($agent->is_active)
-                                                <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                                            @else
-                                                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Inactive</span>
-                                            @endif
+                                        <div class="text-center">
+                                            <div class="font-bold text-gray-900 dark:text-gray-100">{{ $company->users_count - $company->agents->count() }}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">Admins</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="font-bold text-gray-900 dark:text-gray-100">{{ $company->members_count }}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">Members</div>
                                         </div>
                                     </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <div class="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                            <p class="text-xs text-gray-600">
-                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                No agents assigned to this company yet
-                            </p>
-                        </div>
-                    @endif
+                                </td>
 
-                    <!-- Action Buttons -->
-                    <div class="flex gap-2">
-                        <button
-                            wire:click="openEditModal({{ $company->id }})"
-                            class="flex-1 py-3 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold rounded-lg transition"
-                        >
-                            Edit
-                        </button>
-                        <button
-                            wire:click="toggleStatus({{ $company->id }})"
-                            wire:confirm="Are you sure you want to {{ $company->is_active ? 'suspend' : 'activate' }} this company?"
-                            class="flex-1 py-3 {{ $company->is_active ? 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700' : 'bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700' }} text-white font-semibold rounded-lg transition"
-                        >
-                            {{ $company->is_active ? 'Suspend' : 'Activate' }}
-                        </button>
-                    </div>
-                </div>
-            @endforeach
+                                <!-- Status -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($company->is_active)
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
+                                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                            Active
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                                            <span class="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
+                                            Suspended
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <!-- Actions -->
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex justify-end gap-2">
+                                        <button
+                                            wire:click="openAdminsModal({{ $company->id }})"
+                                            class="inline-flex items-center px-3 py-2 bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white font-semibold rounded-lg transition"
+                                        >
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                            </svg>
+                                            Admins
+                                        </button>
+                                        <button
+                                            wire:click="openEditModal({{ $company->id }})"
+                                            class="inline-flex items-center px-3 py-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold rounded-lg transition"
+                                        >
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                            Edit
+                                        </button>
+                                        <button
+                                            wire:click="toggleStatus({{ $company->id }})"
+                                            wire:confirm="Are you sure you want to {{ $company->is_active ? 'suspend' : 'activate' }} this company?"
+                                            class="inline-flex items-center px-3 py-2 {{ $company->is_active ? 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700' : 'bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700' }} text-white font-semibold rounded-lg transition"
+                                        >
+                                            @if($company->is_active)
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                                </svg>
+                                                Suspend
+                                            @else
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                Activate
+                                            @endif
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Pagination -->
@@ -266,18 +238,6 @@
                         @error('name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
-                    <!-- Company Email -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Company Email <span class="text-red-500">*</span></label>
-                        <input
-                            type="email"
-                            wire:model="email"
-                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg focus:bg-white focus:border-uda-yellow-500 focus:ring-2 focus:ring-uda-yellow-200 transition text-gray-900 @error('email') border-red-500 bg-red-50 @enderror"
-                            placeholder="company@example.com"
-                        >
-                        @error('email') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                    </div>
-
                     <!-- Company Phone -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Company Phone <span class="text-red-500">*</span></label>
@@ -304,33 +264,57 @@
 
                     <h3 class="font-bold text-gray-800 text-lg border-b pb-2 pt-4">Admin User</h3>
 
-                    <!-- Admin Name -->
+                    <!-- Admin ID Number -->
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Admin Name <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">ID Number <span class="text-red-500">*</span></label>
                         <input
                             type="text"
-                            wire:model="admin_name"
-                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg focus:bg-white focus:border-uda-green-500 focus:ring-2 focus:ring-uda-green-200 transition text-gray-900 @error('admin_name') border-red-500 bg-red-50 @enderror"
-                            placeholder="Enter admin name"
+                            wire:model="admin_id_number"
+                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg focus:bg-white focus:border-uda-green-500 focus:ring-2 focus:ring-uda-green-200 transition text-gray-900 @error('admin_id_number') border-red-500 bg-red-50 @enderror"
+                            placeholder="Enter ID number"
                         >
-                        @error('admin_name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                        @error('admin_id_number') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
-                    <!-- Admin Email -->
+                    <!-- Admin First Name -->
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Admin Email <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">First Name <span class="text-red-500">*</span></label>
                         <input
-                            type="email"
-                            wire:model="admin_email"
-                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg focus:bg-white focus:border-uda-green-500 focus:ring-2 focus:ring-uda-green-200 transition text-gray-900 @error('admin_email') border-red-500 bg-red-50 @enderror"
-                            placeholder="admin@example.com"
+                            type="text"
+                            wire:model="admin_first_name"
+                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg focus:bg-white focus:border-uda-green-500 focus:ring-2 focus:ring-uda-green-200 transition text-gray-900 @error('admin_first_name') border-red-500 bg-red-50 @enderror"
+                            placeholder="Enter first name"
                         >
-                        @error('admin_email') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                        @error('admin_first_name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Admin Second Name -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Second Name</label>
+                        <input
+                            type="text"
+                            wire:model="admin_second_name"
+                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg focus:bg-white focus:border-uda-green-500 focus:ring-2 focus:ring-uda-green-200 transition text-gray-900 @error('admin_second_name') border-red-500 bg-red-50 @enderror"
+                            placeholder="Enter second name (optional)"
+                        >
+                        @error('admin_second_name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Admin Last Name -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Last Name <span class="text-red-500">*</span></label>
+                        <input
+                            type="text"
+                            wire:model="admin_last_name"
+                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg focus:bg-white focus:border-uda-green-500 focus:ring-2 focus:ring-uda-green-200 transition text-gray-900 @error('admin_last_name') border-red-500 bg-red-50 @enderror"
+                            placeholder="Enter last name"
+                        >
+                        @error('admin_last_name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Admin Phone -->
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Admin Phone <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
                         <input
                             type="tel"
                             wire:model="admin_phone"
@@ -340,26 +324,28 @@
                         @error('admin_phone') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
-                    <!-- Admin Password -->
+                    <!-- Admin PIN -->
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Admin Password <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">PIN <span class="text-red-500">*</span></label>
                         <input
                             type="password"
-                            wire:model="admin_password"
-                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg focus:bg-white focus:border-uda-green-500 focus:ring-2 focus:ring-uda-green-200 transition text-gray-900 @error('admin_password') border-red-500 bg-red-50 @enderror"
-                            placeholder="Minimum 8 characters"
+                            wire:model="admin_pin"
+                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg focus:bg-white focus:border-uda-green-500 focus:ring-2 focus:ring-uda-green-200 transition text-gray-900 @error('admin_pin') border-red-500 bg-red-50 @enderror"
+                            placeholder="4-6 digit PIN"
+                            maxlength="6"
                         >
-                        @error('admin_password') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                        @error('admin_pin') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
-                    <!-- Confirm Password -->
+                    <!-- Confirm PIN -->
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Confirm PIN <span class="text-red-500">*</span></label>
                         <input
                             type="password"
-                            wire:model="admin_password_confirmation"
+                            wire:model="admin_pin_confirmation"
                             class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg focus:bg-white focus:border-uda-green-500 focus:ring-2 focus:ring-uda-green-200 transition text-gray-900"
-                            placeholder="Re-enter password"
+                            placeholder="Re-enter PIN"
+                            maxlength="6"
                         >
                     </div>
 
@@ -459,17 +445,6 @@
                         @error('name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
-                    <!-- Email -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Email <span class="text-red-500">*</span></label>
-                        <input
-                            type="email"
-                            wire:model="email"
-                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg focus:bg-white focus:border-uda-yellow-500 focus:ring-2 focus:ring-uda-yellow-200 transition text-gray-900 @error('email') border-red-500 bg-red-50 @enderror"
-                        >
-                        @error('email') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                    </div>
-
                     <!-- Phone -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
@@ -559,6 +534,221 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    @endif
+
+    <!-- Manage Admins Modal -->
+    @if($showAdminsModal && $managingCompany)
+        <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                <div class="sticky top-0 bg-gradient-to-r from-purple-500 to-indigo-500 px-6 py-4 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Manage Company Admins</h2>
+                        <p class="text-purple-100 text-sm">{{ $managingCompany->name }}</p>
+                    </div>
+                    <button wire:click="closeAdminsModal" class="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="p-6">
+                    <!-- Current Admins List -->
+                    <div class="mb-6">
+                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-lg mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            Current Admins ({{ count($companyAdmins) }})
+                        </h3>
+
+                        @if(count($companyAdmins) > 0)
+                            <div class="bg-white dark:bg-gray-900 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead class="bg-gray-50 dark:bg-gray-800">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Admin</th>
+                                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Contact</th>
+                                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Status</th>
+                                            <th class="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                                        @foreach($companyAdmins as $admin)
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+                                                <td class="px-4 py-3">
+                                                    <div>
+                                                        <div class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ $admin->name }}</div>
+                                                        <div class="text-xs text-gray-500 dark:text-gray-400">ID: {{ $admin->id_number }}</div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-4 py-3">
+                                                    <div class="text-sm text-gray-700 dark:text-gray-300">{{ $admin->phone }}</div>
+                                                </td>
+                                                <td class="px-4 py-3">
+                                                    @if($admin->is_active)
+                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
+                                                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
+                                                            Active
+                                                        </span>
+                                                    @else
+                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                                                            <span class="w-1.5 h-1.5 bg-gray-500 rounded-full mr-1.5"></span>
+                                                            Suspended
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td class="px-4 py-3 text-right">
+                                                    <button
+                                                        wire:click="toggleAdminStatus({{ $admin->id }})"
+                                                        wire:confirm="Are you sure you want to {{ $admin->is_active ? 'suspend' : 'activate' }} this admin?"
+                                                        class="inline-flex items-center px-3 py-1.5 text-xs {{ $admin->is_active ? 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700' : 'bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700' }} text-white font-semibold rounded transition"
+                                                    >
+                                                        {{ $admin->is_active ? 'Suspend' : 'Activate' }}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-8 text-center border-2 border-dashed border-gray-300 dark:border-gray-700">
+                                <svg class="w-12 h-12 mx-auto text-gray-400 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                <p class="text-gray-600 dark:text-gray-400 font-medium">No admins yet</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Add the first admin using the form below</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Add New Admin Form -->
+                    <div class="border-t-2 border-gray-200 dark:border-gray-700 pt-6">
+                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-lg mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Add New Admin
+                        </h3>
+
+                        <form wire:submit.prevent="addAdmin" class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- ID Number -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">ID Number <span class="text-red-500">*</span></label>
+                                    <input
+                                        type="text"
+                                        wire:model="admin_id_number"
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:bg-white dark:focus:bg-gray-600 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-500/30 transition text-gray-900 dark:text-gray-100 @error('admin_id_number') border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                                        placeholder="Enter ID number"
+                                    >
+                                    @error('admin_id_number') <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
+                                </div>
+
+                                <!-- Phone Number -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Phone Number <span class="text-red-500">*</span></label>
+                                    <input
+                                        type="tel"
+                                        wire:model="admin_phone"
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:bg-white dark:focus:bg-gray-600 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-500/30 transition text-gray-900 dark:text-gray-100 @error('admin_phone') border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                                        placeholder="0712345678"
+                                    >
+                                    @error('admin_phone') <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4">
+                                <!-- First Name -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">First Name <span class="text-red-500">*</span></label>
+                                    <input
+                                        type="text"
+                                        wire:model="admin_first_name"
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:bg-white dark:focus:bg-gray-600 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-500/30 transition text-gray-900 dark:text-gray-100 @error('admin_first_name') border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                                        placeholder="First name"
+                                    >
+                                    @error('admin_first_name') <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
+                                </div>
+
+                                <!-- Second Name -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Second Name</label>
+                                    <input
+                                        type="text"
+                                        wire:model="admin_second_name"
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:bg-white dark:focus:bg-gray-600 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-500/30 transition text-gray-900 dark:text-gray-100 @error('admin_second_name') border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                                        placeholder="Second name"
+                                    >
+                                    @error('admin_second_name') <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
+                                </div>
+
+                                <!-- Last Name -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Last Name <span class="text-red-500">*</span></label>
+                                    <input
+                                        type="text"
+                                        wire:model="admin_last_name"
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:bg-white dark:focus:bg-gray-600 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-500/30 transition text-gray-900 dark:text-gray-100 @error('admin_last_name') border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                                        placeholder="Last name"
+                                    >
+                                    @error('admin_last_name') <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- PIN -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">PIN <span class="text-red-500">*</span></label>
+                                    <input
+                                        type="password"
+                                        wire:model="admin_pin"
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:bg-white dark:focus:bg-gray-600 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-500/30 transition text-gray-900 dark:text-gray-100 @error('admin_pin') border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                                        placeholder="4-6 digit PIN"
+                                        maxlength="6"
+                                    >
+                                    @error('admin_pin') <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
+                                </div>
+
+                                <!-- Confirm PIN -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Confirm PIN <span class="text-red-500">*</span></label>
+                                    <input
+                                        type="password"
+                                        wire:model="admin_pin_confirmation"
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:bg-white dark:focus:bg-gray-600 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-500/30 transition text-gray-900 dark:text-gray-100"
+                                        placeholder="Re-enter PIN"
+                                        maxlength="6"
+                                    >
+                                </div>
+                            </div>
+
+                            @error('add_admin') <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
+
+                            <!-- Form Actions -->
+                            <div class="flex gap-3 pt-4">
+                                <button
+                                    type="button"
+                                    wire:click="closeAdminsModal"
+                                    class="flex-1 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold rounded-lg transition"
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    type="submit"
+                                    wire:loading.attr="disabled"
+                                    class="flex-1 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:opacity-50 text-white font-semibold rounded-lg transition"
+                                >
+                                    <span wire:loading.remove>Add Admin</span>
+                                    <span wire:loading>Adding...</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     @endif

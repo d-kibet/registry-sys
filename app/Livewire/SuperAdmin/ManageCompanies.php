@@ -17,21 +17,24 @@ class ManageCompanies extends Component
     public $search = '';
     public $showCreateModal = false;
     public $showEditModal = false;
+    public $showAdminsModal = false;
     public $editingCompanyId;
+    public $managingCompanyId;
 
     // Form fields
     public $name;
-    public $email;
     public $phone;
     public $address;
     public $is_active = true;
 
     // Admin fields (for new company)
-    public $admin_name;
-    public $admin_email;
+    public $admin_id_number;
+    public $admin_first_name;
+    public $admin_second_name;
+    public $admin_last_name;
     public $admin_phone;
-    public $admin_password;
-    public $admin_password_confirmation;
+    public $admin_pin;
+    public $admin_pin_confirmation;
 
     // Constituency assignment
     public $selectedConstituencies = [];
@@ -42,20 +45,23 @@ class ManageCompanies extends Component
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:companies,email'],
             'phone' => ['required', 'regex:/^(0|\+254)[17]\d{8}$/', 'unique:companies,phone'],
             'address' => ['nullable', 'string', 'max:500'],
             'is_active' => ['boolean'],
-            'admin_name' => ['required', 'string', 'max:255'],
-            'admin_email' => ['required', 'email', 'unique:users,email'],
+            'admin_id_number' => ['required', 'string', 'regex:/^\d{7,8}$/', 'unique:users,id_number'],
+            'admin_first_name' => ['required', 'string', 'max:255'],
+            'admin_second_name' => ['nullable', 'string', 'max:255'],
+            'admin_last_name' => ['required', 'string', 'max:255'],
             'admin_phone' => ['required', 'regex:/^(0|\+254)[17]\d{8}$/', 'unique:users,phone'],
-            'admin_password' => ['required', 'min:8', 'confirmed'],
+            'admin_pin' => ['required', 'digits_between:4,6', 'confirmed'],
         ];
     }
 
     protected $messages = [
         'phone.regex' => 'Phone number must be in Kenyan format (e.g., 0712345678 or +254712345678)',
         'admin_phone.regex' => 'Phone number must be in Kenyan format (e.g., 0712345678 or +254712345678)',
+        'admin_id_number.regex' => 'ID number must be 7 or 8 digits',
+        'admin_pin.digits_between' => 'PIN must be between 4 and 6 digits',
     ];
 
     /**
@@ -105,19 +111,29 @@ class ManageCompanies extends Component
             // Create company
             $company = Company::create([
                 'name' => $this->name,
-                'email' => $this->email,
                 'phone' => $this->phone,
                 'address' => $this->address,
                 'is_active' => $this->is_active,
             ]);
 
             // Create company admin
+            // Build full name from name parts
+            $fullName = trim(implode(' ', array_filter([
+                $this->admin_first_name,
+                $this->admin_second_name,
+                $this->admin_last_name
+            ])));
+
             $admin = User::create([
                 'company_id' => $company->id,
-                'name' => $this->admin_name,
-                'email' => $this->admin_email,
+                'id_number' => $this->admin_id_number,
+                'first_name' => $this->admin_first_name,
+                'second_name' => $this->admin_second_name,
+                'last_name' => $this->admin_last_name,
+                'name' => $fullName,
+                'email' => null,
                 'phone' => $this->admin_phone,
-                'password' => Hash::make($this->admin_password),
+                'password' => Hash::make($this->admin_pin),
                 'is_active' => true,
             ]);
 
@@ -149,7 +165,6 @@ class ManageCompanies extends Component
 
         $this->editingCompanyId = $companyId;
         $this->name = $company->name;
-        $this->email = $company->email;
         $this->phone = $company->phone;
         $this->address = $company->address;
         $this->is_active = $company->is_active;
@@ -177,7 +192,6 @@ class ManageCompanies extends Component
 
         $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:companies,email,' . $this->editingCompanyId],
             'phone' => ['required', 'regex:/^(0|\+254)[17]\d{8}$/', 'unique:companies,phone,' . $this->editingCompanyId],
             'address' => ['nullable', 'string', 'max:500'],
             'is_active' => ['boolean'],
@@ -190,7 +204,6 @@ class ManageCompanies extends Component
 
             $company->update([
                 'name' => $this->name,
-                'email' => $this->email,
                 'phone' => $this->phone,
                 'address' => $this->address,
                 'is_active' => $this->is_active,
@@ -228,22 +241,132 @@ class ManageCompanies extends Component
     }
 
     /**
+     * Open manage admins modal
+     */
+    public function openAdminsModal($companyId)
+    {
+        $this->managingCompanyId = $companyId;
+        $this->resetAdminFields();
+        $this->showAdminsModal = true;
+    }
+
+    /**
+     * Close manage admins modal
+     */
+    public function closeAdminsModal()
+    {
+        $this->showAdminsModal = false;
+        $this->managingCompanyId = null;
+        $this->resetAdminFields();
+        $this->resetValidation();
+    }
+
+    /**
+     * Add new admin to company
+     */
+    public function addAdmin()
+    {
+        $company = Company::findOrFail($this->managingCompanyId);
+
+        // Validate only admin fields
+        $rules = [
+            'admin_id_number' => ['required', 'string', 'regex:/^\d{7,8}$/', 'unique:users,id_number'],
+            'admin_first_name' => ['required', 'string', 'max:255'],
+            'admin_second_name' => ['nullable', 'string', 'max:255'],
+            'admin_last_name' => ['required', 'string', 'max:255'],
+            'admin_phone' => ['required', 'regex:/^(0|\+254)[17]\d{8}$/', 'unique:users,phone'],
+            'admin_pin' => ['required', 'digits_between:4,6', 'confirmed'],
+        ];
+
+        $this->validate($rules);
+
+        try {
+            // Build full name from name parts
+            $fullName = trim(implode(' ', array_filter([
+                $this->admin_first_name,
+                $this->admin_second_name,
+                $this->admin_last_name
+            ])));
+
+            $admin = User::create([
+                'company_id' => $company->id,
+                'id_number' => $this->admin_id_number,
+                'first_name' => $this->admin_first_name,
+                'second_name' => $this->admin_second_name,
+                'last_name' => $this->admin_last_name,
+                'name' => $fullName,
+                'email' => null,
+                'phone' => $this->admin_phone,
+                'password' => Hash::make($this->admin_pin),
+                'is_active' => true,
+            ]);
+
+            $admin->assignRole('Company Admin');
+
+            // Log the action
+            AuditLog::log('admin_created', $admin, null, $admin->toArray());
+
+            session()->flash('success', 'Admin added successfully!');
+            $this->resetAdminFields();
+            $this->resetValidation();
+
+        } catch (\Exception $e) {
+            $this->addError('add_admin', 'Failed to add admin: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Toggle admin active status
+     */
+    public function toggleAdminStatus($adminId)
+    {
+        $admin = User::findOrFail($adminId);
+
+        $oldData = $admin->toArray();
+        $admin->update(['is_active' => !$admin->is_active]);
+
+        // Log the action
+        AuditLog::log('admin_status_changed', $admin, $oldData, $admin->fresh()->toArray());
+
+        $status = $admin->is_active ? 'activated' : 'suspended';
+        session()->flash('success', "Admin {$status} successfully!");
+    }
+
+    /**
+     * Reset admin fields only
+     */
+    protected function resetAdminFields()
+    {
+        $this->reset([
+            'admin_id_number',
+            'admin_first_name',
+            'admin_second_name',
+            'admin_last_name',
+            'admin_phone',
+            'admin_pin',
+            'admin_pin_confirmation',
+        ]);
+    }
+
+    /**
      * Reset form
      */
     protected function resetForm()
     {
         $this->reset([
             'name',
-            'email',
             'phone',
             'address',
             'is_active',
-            'admin_name',
-            'admin_email',
+            'admin_id_number',
+            'admin_first_name',
+            'admin_second_name',
+            'admin_last_name',
             'admin_phone',
-            'admin_password',
-            'admin_password_confirmation',
+            'admin_pin',
+            'admin_pin_confirmation',
             'editingCompanyId',
+            'managingCompanyId',
             'selectedConstituencies',
         ]);
         $this->is_active = true;
@@ -257,7 +380,6 @@ class ManageCompanies extends Component
         $companies = Company::when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('name', 'like', "%{$this->search}%")
-                        ->orWhere('email', 'like', "%{$this->search}%")
                         ->orWhere('phone', 'like', "%{$this->search}%");
                 });
             })
@@ -273,9 +395,21 @@ class ManageCompanies extends Component
 
         $constituencies = Constituency::orderBy('county')->orderBy('name')->get();
 
+        // Load company admins if managing admins
+        $managingCompany = null;
+        $companyAdmins = [];
+        if ($this->managingCompanyId) {
+            $managingCompany = Company::with(['admins' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }])->findOrFail($this->managingCompanyId);
+            $companyAdmins = $managingCompany->admins;
+        }
+
         return view('livewire.super-admin.manage-companies', [
             'companies' => $companies,
             'constituencies' => $constituencies,
+            'managingCompany' => $managingCompany,
+            'companyAdmins' => $companyAdmins,
         ]);
     }
 }
