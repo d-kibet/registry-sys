@@ -3,64 +3,92 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+    /**
+     * Helper function to safely add index
+     */
+    private function safelyAddIndex($table, $columns, $indexName = null)
+    {
+        $tableName = is_string($table) ? $table : 'unknown';
+        $columnList = is_array($columns) ? implode(', ', $columns) : $columns;
+
+        try {
+            if (is_callable($table)) {
+                Schema::table($tableName, $table);
+            } else {
+                Schema::table($table, function (Blueprint $t) use ($columns) {
+                    $t->index($columns);
+                });
+            }
+        } catch (\Exception $e) {
+            echo "⚠️  Could not add index on {$tableName}({$columnList}): " . $e->getMessage() . "\n";
+        }
+    }
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         // Users table indexes
-        Schema::table('users', function (Blueprint $table) {
-            // email - already indexed via unique constraint
-            $table->index('phone');
-            // company_id - already indexed in base migration
-            // is_active - already indexed in base migration
-            $table->index(['company_id', 'is_active']); // Composite for filtering active users by company
-            $table->index('created_at');
-        });
+        try {
+            Schema::table('users', function (Blueprint $table) {
+                $table->index('phone');
+                $table->index(['company_id', 'is_active']);
+                $table->index('created_at');
+            });
+        } catch (\Exception $e) {
+            echo "⚠️  Could not add indexes to users table: " . $e->getMessage() . "\n";
+        }
 
         // Members table indexes
-        Schema::table('members', function (Blueprint $table) {
-            // phone_number - already indexed in base migration
-            $table->index('id_number'); // For duplicate detection
-            // company_id, registered_by, constituency_id - already indexed via foreign keys
-            $table->index('is_verified'); // For filtering verified members
-            $table->index(['company_id', 'created_at']); // For company reports by date
-            $table->index(['registered_by', 'created_at']); // For agent performance reports
-            $table->index(['constituency_id', 'created_at']); // For constituency reports
-            $table->index('created_at'); // For general date filtering
-        });
+        try {
+            Schema::table('members', function (Blueprint $table) {
+                $table->index('id_number');
+                $table->index('is_verified');
+                $table->index(['company_id', 'created_at']);
+                $table->index(['registered_by', 'created_at']);
+                $table->index(['constituency_id', 'created_at']);
+                $table->index('created_at');
+            });
+        } catch (\Exception $e) {
+            echo "⚠️  Could not add indexes to members table: " . $e->getMessage() . "\n";
+        }
 
         // Companies table indexes
-        Schema::table('companies', function (Blueprint $table) {
-            // email - already indexed via unique constraint
-            $table->index('phone');
-            // is_active - already indexed in base migration
-            $table->index('created_at');
-        });
+        try {
+            Schema::table('companies', function (Blueprint $table) {
+                $table->index('phone');
+                $table->index('created_at');
+            });
+        } catch (\Exception $e) {
+            echo "⚠️  Could not add indexes to companies table: " . $e->getMessage() . "\n";
+        }
 
         // Constituencies table indexes
-        Schema::table('constituencies', function (Blueprint $table) {
-            // county - already indexed in base migration
-            // name - already indexed via unique constraint
-            $table->index(['county', 'name']); // Composite for lookups
-        });
+        try {
+            Schema::table('constituencies', function (Blueprint $table) {
+                $table->index(['county', 'name']);
+            });
+        } catch (\Exception $e) {
+            echo "⚠️  Could not add indexes to constituencies table: " . $e->getMessage() . "\n";
+        }
 
         // Audit logs table indexes
-        Schema::table('audit_logs', function (Blueprint $table) {
-            // user_id - already indexed in base migration
-            $table->index('action'); // For filtering by action type
-            // auditable_type - already indexed individually in base migration
-            $table->index('auditable_id'); // For finding specific model audits
-            // ['auditable_type', 'auditable_id'] - already indexed as composite in base migration
-            // created_at - already indexed in base migration
-            $table->index(['user_id', 'created_at']); // For user activity timeline
-        });
+        try {
+            Schema::table('audit_logs', function (Blueprint $table) {
+                $table->index('action');
+                $table->index('auditable_id');
+                $table->index(['user_id', 'created_at']);
+            });
+        } catch (\Exception $e) {
+            echo "⚠️  Could not add indexes to audit_logs table: " . $e->getMessage() . "\n";
+        }
 
-        // Company-Constituency pivot table indexes (already have indexes from foreign keys)
-        // No additional indexes needed
+        echo "✅ Performance indexes migration completed (some may have been skipped due to permissions)\n";
     }
 
     /**
@@ -69,40 +97,60 @@ return new class extends Migration
     public function down(): void
     {
         // Users table indexes
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropIndex(['phone']);
-            $table->dropIndex(['company_id', 'is_active']);
-            $table->dropIndex(['created_at']);
-        });
+        try {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropIndex(['phone']);
+                $table->dropIndex(['company_id', 'is_active']);
+                $table->dropIndex(['created_at']);
+            });
+        } catch (\Exception $e) {
+            echo "⚠️  Could not drop indexes from users table: " . $e->getMessage() . "\n";
+        }
 
         // Members table indexes
-        Schema::table('members', function (Blueprint $table) {
-            $table->dropIndex(['id_number']);
-            $table->dropIndex(['is_verified']);
-            $table->dropIndex(['company_id', 'created_at']);
-            $table->dropIndex(['registered_by', 'created_at']);
-            $table->dropIndex(['constituency_id', 'created_at']);
-            $table->dropIndex(['created_at']);
-        });
+        try {
+            Schema::table('members', function (Blueprint $table) {
+                $table->dropIndex(['id_number']);
+                $table->dropIndex(['is_verified']);
+                $table->dropIndex(['company_id', 'created_at']);
+                $table->dropIndex(['registered_by', 'created_at']);
+                $table->dropIndex(['constituency_id', 'created_at']);
+                $table->dropIndex(['created_at']);
+            });
+        } catch (\Exception $e) {
+            echo "⚠️  Could not drop indexes from members table: " . $e->getMessage() . "\n";
+        }
 
         // Companies table indexes
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropIndex(['phone']);
-            $table->dropIndex(['created_at']);
-        });
+        try {
+            Schema::table('companies', function (Blueprint $table) {
+                $table->dropIndex(['phone']);
+                $table->dropIndex(['created_at']);
+            });
+        } catch (\Exception $e) {
+            echo "⚠️  Could not drop indexes from companies table: " . $e->getMessage() . "\n";
+        }
 
         // Constituencies table indexes
-        Schema::table('constituencies', function (Blueprint $table) {
-            $table->dropIndex(['county', 'name']);
-        });
+        try {
+            Schema::table('constituencies', function (Blueprint $table) {
+                $table->dropIndex(['county', 'name']);
+            });
+        } catch (\Exception $e) {
+            echo "⚠️  Could not drop indexes from constituencies table: " . $e->getMessage() . "\n";
+        }
 
         // Audit logs table indexes
-        Schema::table('audit_logs', function (Blueprint $table) {
-            $table->dropIndex(['action']);
-            $table->dropIndex(['auditable_id']);
-            $table->dropIndex(['user_id', 'created_at']);
-        });
+        try {
+            Schema::table('audit_logs', function (Blueprint $table) {
+                $table->dropIndex(['action']);
+                $table->dropIndex(['auditable_id']);
+                $table->dropIndex(['user_id', 'created_at']);
+            });
+        } catch (\Exception $e) {
+            echo "⚠️  Could not drop indexes from audit_logs table: " . $e->getMessage() . "\n";
+        }
 
-        // Company-Constituency pivot table indexes (no additional indexes to drop)
+        echo "✅ Performance indexes rollback completed\n";
     }
 };
